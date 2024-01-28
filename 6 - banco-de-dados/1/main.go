@@ -26,7 +26,7 @@ func main() {
 
 	const (
 		host     = "localhost"
-		port     = 5444
+		port     = 5432
 		user     = "fon"
 		password = "fon"
 		dbname   = "fonfon"
@@ -61,6 +61,30 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	p, err := findProductById(database, product.ID)
+
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("Product: %v, possui o valor de: %.2f", p.Name, p.Price)
+
+	products, err := finProducts(database)
+
+	if err != nil {
+		panic(err)
+	}
+
+	for _, p := range products {
+		fmt.Printf("Product: %v, possui o valor de: %.2f \n", p.Name, p.Price)
+	}
+
+	err = deleteProduct(database, p.ID)
+
+	if err != nil {
+		panic(err)
+	}
 }
 
 func insertProduct(database *sql.DB, product *Product) error {
@@ -81,8 +105,8 @@ func insertProduct(database *sql.DB, product *Product) error {
 	return nil
 }
 
-func updateProduct(dabatse *sql.DB, product *Product) error {
-	statement, err := dabatse.Prepare("update products set name = $1, price = $2 where id = $3")
+func updateProduct(database *sql.DB, product *Product) error {
+	statement, err := database.Prepare("update products set name = $1, price = $2 where id = $3")
 
 	if err != nil {
 		return err
@@ -109,23 +133,57 @@ func findProductById(database *sql.DB, id string) (*Product, error) {
 
 	defer statement.Close()
 
-	row := statement.QueryRow(id)
+	var product Product
 
-	var productID string
-	var name string
-	var price float64
-
-	err = row.Scan(&productID, &name, &price)
-
-	product := &Product{
-		ID:    productID,
-		Name:  name,
-		Price: price,
-	}
+	err = statement.QueryRow(id).Scan(&product.ID, &product.Name, &product.Price)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return product, nil
+	return &product, nil
+}
+
+func finProducts(database *sql.DB) ([]Product, error) {
+	rows, err := database.Query("select id, name, price from products")
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var products []Product
+
+	for rows.Next() {
+		var product Product
+
+		err = rows.Scan(&product.ID, &product.Name, &product.Price)
+
+		if err != nil {
+			return nil, err
+		}
+
+		products = append(products, product)
+	}
+
+	return products, nil
+}
+
+func deleteProduct(database *sql.DB, id string) error {
+	statement, err := database.Prepare("delete from products where id = $1")
+
+	if err != nil {
+		return err
+	}
+
+	defer statement.Close()
+
+	_, err = statement.Exec(id)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
