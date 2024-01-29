@@ -1,0 +1,8 @@
+go mod edit -replace github.com/devfullcicly/goexpert/7/3/math=../math
+
+fazendo o mapeamento de ondo o comando go mod tidy iria buscar no github ele 
+vai buscar na pasta math passando depois do =, ou seja, o caminho relativo.
+
+depois disso rodar um go mod tidy
+
+ficando igual ao print: imagagem.png
