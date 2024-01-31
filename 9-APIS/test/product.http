@@ -1,4 +1,8 @@
 
+
+  @token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDY3MTMxMTAsInN1YiI6ImFjMjI0ZTMwLTMxOTQtNGM3ZS05ZTQ4LTgwOGFkMTNjZDA2ZCJ9.Yax5FOLE1GwN8GMx-OYCYpCF_6OXysox3x4krg-CXJ0"
+
+
 POST http://localhost:8080/products
 Content-Type: application/json
 
@@ -31,5 +35,6 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:8080/products?page=2&limit=10&sort=asc
+GET http://localhost:8080/products?page=1&limit=10&sort=asc
+Authorization: Bearer {{token}}
 Content-Type: application/json
