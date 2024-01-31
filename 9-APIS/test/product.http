@@ -12,3 +12,12 @@ Content-Type: application/json
 GET http://localhost:8080/products/9a7670bb-f9bb-4639-87b2-231aafa51a5a
 Content-Type: application/json
 
+####
+
+PUT http://localhost:8080/products/9a7670bb-f9bb-4639-87b2-231aafa51a5a
+Content-Type: application/json
+
+{
+  "name": "Product 1 updated",
+  "price": 200
+}
