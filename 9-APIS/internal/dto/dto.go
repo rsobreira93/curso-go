@@ -10,3 +10,8 @@ type CreateUserDTO struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
+
+type CreateJWTDTO struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
